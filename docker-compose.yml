@@ -1,0 +1,33 @@
+version: '3.9'
+name: "jenkins"
+services:
+  jenkins-main:
+    container_name: jenkins_traid
+    image: jenkins/jenkins:2.414.3-lts-jdk17
+    privileged: true
+    restart: unless-stopped
+    hostname: "jenkins-traid.ru"
+    extra_hosts:
+      - "jenkins-traid.ru:172.10.0.2"
+    networks:
+      net:
+        ipv4_address: 172.10.0.2
+    ports:
+      - 8080:8080
+      - 50000:50000
+    volumes:
+      - "ci-jenkins:/var/jenkins_home"
+      - "jenkins-docker-certs:/certs/client"
+    environment:
+      - TZ=Europe/Moscow
+      
+networks:
+  net:
+    external:
+      name: mycustomnetwork
+  
+volumes:
+  ci-jenkins:
+    external: true
+  jenkins-docker-certs:
+    external: true
